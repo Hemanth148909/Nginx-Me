@@ -1,103 +1,50 @@
-DevOps Portfolio - Serving HTML Pages with Nginx on Kubernetes
-This project demonstrates how to serve custom HTML pages using Nginx deployed on a Kubernetes cluster. The HTML pages are stored in ConfigMaps and mounted as volumes inside the Nginx pod. The service is exposed internally via a ClusterIP, and you can access the pages using port forwarding for local testing.
+# 🚀 DevOps Portfolio: Serving HTML Pages with Nginx on Kubernetes 🎉
 
-Project Structure
-index.html — Root page (/): Welcome page with a brief intro and skills.
+Welcome to my **DevOps portfolio project**!  
+This project shows how to serve **custom HTML pages** using **Nginx** inside a **Kubernetes** cluster.  
+All website files are managed as **ConfigMaps** and mounted inside the Nginx Pod — a neat way to handle static websites in Kubernetes! 🎨✨
 
-hemanth.html — Detailed profile page (/hemanth): About me, skills, projects, and contact info.
+---
 
-Nginx ConfigMap — Contains the HTML files and Nginx config to serve both pages correctly.
+## 🌟 Project Overview
 
-Deployment manifest — Deploys Nginx with mounted ConfigMap as a volume.
+| Feature                  | Description                                         | Emoji      |
+|--------------------------|-----------------------------------------------------|------------|
+| **Root page `/`**        | Friendly welcome with intro & skills                | 👋         |
+| **Profile page `/hemanth`** | Detailed profile, skills, projects, and contacts    | 📄         |
+| **Nginx ConfigMap**      | Contains HTML files + custom Nginx config           | 📦         |
+| **Deployment**           | Runs Nginx pod with ConfigMap volume mount          | 🐳         |
+| **ClusterIP Service**    | Internal service exposing Nginx on port 80          | 🔗         |
+| **Port Forwarding**      | Forward local port to access app during dev/testing | 🔄         |
 
-Service manifest — Exposes Nginx with a ClusterIP service.
+---
 
-Port forwarding — Forwards local port to Nginx service for easy access.
+## ⚙️ How It Works
 
-How It Works
-ConfigMap contains your static website files (HTML and nginx configuration).
+1. **ConfigMap** holds your static website files (HTML + Nginx config).  
+2. **Deployment** mounts ConfigMap as a volume inside the Nginx Pod — Nginx serves your pages directly.  
+3. **ClusterIP Service** exposes Nginx internally within the cluster.  
+4. Use `kubectl port-forward` to access the website locally. Easy peasy! 🍋
 
-Deployment mounts the ConfigMap as a volume inside the Nginx pod, so Nginx serves your pages from there.
+---
 
-ClusterIP Service exposes the Nginx pod inside the cluster on a stable IP and port.
+## 📋 Prerequisites
 
-You use kubectl port-forward to forward the service port to your local machine for accessing the site.
+- A running Kubernetes cluster ⛵  
+- `kubectl` configured for your cluster ⚙️  
+- Basic understanding of Kubernetes resources (ConfigMap, Deployment, Service) 📚  
+- Official Nginx Docker image (no need to build your own!) 🐋  
 
-Prerequisites
-Kubernetes cluster up and running
+---
 
-kubectl configured to access your cluster
+## 🚧 Step-by-step Setup Guide
 
-Basic knowledge of Kubernetes resources (ConfigMap, Deployment, Service)
+### 1️⃣ Create ConfigMap with HTML & Nginx config
 
-Nginx Docker image (official)
-
-Step-by-step Setup
-1. Create ConfigMap with HTML and Nginx config
-bash
-Copy
-Edit
+```bash
 kubectl create configmap nginx-config \
   --from-file=index.html=./index.html \
   --from-file=hemanth.html=./hemanth.html \
   --from-file=default.conf=./default.conf \
   -n your-namespace \
   --dry-run=client -o yaml > nginx-configmap.yaml
-default.conf should configure Nginx to serve / from index.html and /hemanth from hemanth.html.
-
-2. Deploy Nginx with ConfigMap mounted as volume
-Apply your deployment.yaml manifest that:
-
-Creates a Pod running Nginx
-
-Mounts the ConfigMap volume at /usr/share/nginx/html (or wherever Nginx expects files)
-
-Uses the custom default.conf as Nginx config
-
-3. Create ClusterIP Service
-Apply your service.yaml manifest to expose Nginx internally on port 80.
-
-4. Access the app locally via port-forwarding
-Run this command to forward port 8080 on your machine to the service’s port 80:
-
-bash
-Copy
-Edit
-kubectl port-forward svc/nginx-service 8080:80 -n your-namespace
-Now open your browser and visit:
-
-http://localhost:8080/ for root page
-
-http://localhost:8080/hemanth for your profile page
-
-Example Nginx default.conf
-nginx
-Copy
-Edit
-server {
-  listen 80;
-
-  location = / {
-    root /usr/share/nginx/html;
-    index index.html;
-  }
-
-  location = /hemanth {
-    root /usr/share/nginx/html;
-    index hemanth.html;
-  }
-}
-Notes
-You can update your HTML files by editing the ConfigMap and redeploying.
-
-This setup is perfect for simple static sites and learning Kubernetes ConfigMaps and volume mounts.
-
-For production, consider using Ingress or LoadBalancer service for external access.
-
-Contact
-If you want to connect or learn more about my DevOps journey:
-
-LinkedIn: https://linkedin.com/in/hemanth
-
-GitHub: https://github.com/hemanth
-
